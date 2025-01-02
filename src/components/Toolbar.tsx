@@ -1,0 +1,1 @@
+// Este arquivo será removido pois foi substituído por src/components/toolbar/Toolbar.tsx

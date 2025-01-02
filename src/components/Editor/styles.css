@@ -1,0 +1,156 @@
+/* Editor Container */
+.editor-container {
+  min-height: 100%;
+  padding: 0.75rem;
+}
+
+/* Basic Editor */
+.editor {
+  width: 100%;
+  min-height: calc(100vh - 4rem);
+  outline: none;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #0A0A0A;
+  background: transparent;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  direction: ltr !important;
+  unicode-bidi: plaintext;
+  caret-color: #be9202;
+}
+
+.dark .editor {
+  color: #e5e7eb;
+  caret-color: #be9202;
+}
+
+.editor:empty:before {
+  content: 'Comece a escrever...';
+  color: #9ca3af;
+  position: absolute;
+}
+
+/* Preview Styles */
+.preview {
+  width: 100%;
+  min-height: calc(100vh - 4rem);
+  outline: none;
+  padding: 0.75rem;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #0A0A0A;
+}
+
+.dark .preview {
+  color: #e5e7eb;
+}
+
+.preview:empty:before {
+  content: 'Comece a escrever...';
+  color: #9ca3af;
+  position: absolute;
+}
+
+/* Preview Typography */
+.preview h1,
+.preview h2,
+.preview h3 {
+  font-weight: 600;
+  color: #0A0A0A;
+}
+
+.dark .preview h1,
+.dark .preview h2,
+.dark .preview h3 {
+  color: #be9202;
+}
+
+.preview h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.preview h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+
+.preview h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+.preview p {
+  margin: 1em 0;
+}
+
+.preview ul {
+  list-style-type: disc;
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.preview blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 4px solid #be9202;
+  color: #9ca3af;
+}
+
+.dark .preview blockquote {
+  border-left-color: #be9202;
+}
+
+.preview strong {
+  font-weight: 600;
+  color: #be9202;
+}
+
+.preview em {
+  font-style: italic;
+  color: #e5e7eb;
+}
+
+/* Dark mode overrides */
+.dark .prose {
+  color: #e5e7eb;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  color: #be9202;
+}
+
+.dark .prose strong {
+  color: #be9202;
+}
+
+.dark .prose a {
+  color: #be9202;
+}
+
+.dark .prose blockquote {
+  border-left-color: #be9202;
+  color: #9ca3af;
+}
+
+.dark .prose code {
+  color: #e5e7eb;
+  background-color: #1A1A1A;
+}
+
+.dark .prose hr {
+  border-color: #1A1A1A;
+}
+
+.dark .prose thead {
+  border-bottom-color: #1A1A1A;
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: #1A1A1A;
+}
