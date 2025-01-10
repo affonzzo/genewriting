@@ -9,7 +9,6 @@ interface EditorProps {
   onTextChange: (text: string) => void;
   isLocked?: boolean;
   lockedContent?: string;
-  isMarkdownView?: boolean;
 }
 
 export default function Editor({ 
@@ -17,8 +16,7 @@ export default function Editor({
   text, 
   onTextChange,
   isLocked = false,
-  lockedContent = '',
-  isMarkdownView = false
+  lockedContent = ''
 }: EditorProps) {
   return (
     <Paper>
@@ -28,7 +26,6 @@ export default function Editor({
             content={lockedContent}
             onChange={() => {}}
             readOnly
-            isMarkdownView={isMarkdownView}
           />
         </div>
       )}
@@ -36,7 +33,6 @@ export default function Editor({
         content={text}
         onChange={onTextChange}
         readOnly={isLocked}
-        isMarkdownView={isMarkdownView}
       />
     </Paper>
   );

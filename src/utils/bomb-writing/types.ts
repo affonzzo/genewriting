@@ -1,14 +1,19 @@
 export interface BombWritingSettings {
-  totalTime: number;
-  maxPauseTime: number;
-  duration: number;
+  totalTime: number;  // in minutes
+  maxPauseTime: number;  // in seconds
+}
+
+export interface BombWritingStats {
+  wordsCount: number;
+  averageWPM: number;
+  activeWritingTime: number;  // in seconds
 }
 
 export interface BombWritingState {
-  previousText: string;
-  currentText: string;
-  isActive: boolean;
-  settings: BombWritingSettings | null;
-  sessionStartTime: number | null;
-  timer: number;
+  isSessionActive: boolean;
+  timeLeft: number;  // in seconds
+  pauseTimeLeft: number;  // in seconds
+  currentContent: string;
+  startTime?: number;
+  lastTypeTime?: number;
 }

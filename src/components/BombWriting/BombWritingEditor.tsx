@@ -9,7 +9,7 @@ import { VictoryModal } from './Modals/VictoryModal';
 import { DefeatModal } from './Modals/DefeatModal';
 import { BombBoundary } from './BombBoundary';
 import { Paper } from '../Paper';
-import { MarkdownEditor } from '../Editor/MarkdownEditor';
+import { SimpleEditor } from '../Editor/SimpleEditor';
 
 interface BombWritingEditorProps {
   settings: BombWritingSettings;
@@ -51,14 +51,21 @@ export function BombWritingEditor({
   const handleStartNew = useCallback(() => {
     onComplete(state.currentContent);
     setShowVictory(false);
+    resetSession(); // Reset antes de mostrar o modal de início
     setShowStart(true);
-  }, [state.currentContent, onComplete]);
+  }, [state.currentContent, onComplete, resetSession]);
 
   const handleReconfigure = useCallback(() => {
     onComplete(state.currentContent);
     setBombSettingsVisible(true);
     onReset();
   }, [state.currentContent, onComplete, onReset, setBombSettingsVisible]);
+
+  const handleDefeatReconfigure = useCallback(() => {
+    resetSession();
+    setBombSettingsVisible(true);
+    onReset();
+  }, [resetSession, onReset, setBombSettingsVisible]);
 
   const handleVictoryClose = useCallback(() => {
     onComplete(state.currentContent);
@@ -77,30 +84,28 @@ export function BombWritingEditor({
       <div className="flex-1">
         <Paper>
           <div className="flex flex-col min-h-full">
-            {/* Conteúdo anterior */}
+            {/* Conteúdo anterior - sempre bloqueado */}
             {previousContent && (
-              <div className="border-b border-gray-100 dark:border-luxury-700">
-                <div className="opacity-60">
-                  <MarkdownEditor
+              <div>
+                <div className="opacity-60 pointer-events-none select-none">
+                  <SimpleEditor
                     content={previousContent}
                     onChange={() => {}}
-                    readOnly
-                    isMarkdownView={false}
+                    readOnly={true}
                   />
                 </div>
-                
-                {/* Fronteira laser exatamente após o conteúdo anterior */}
-                {state.isSessionActive && <BombBoundary />}
+                <div className="-mt-4">
+                  {state.isSessionActive && <BombBoundary />}
+                </div>
               </div>
             )}
 
             {/* Área de escrita ativa */}
-            <div className={`flex-1 ${!state.isSessionActive && 'opacity-60 pointer-events-none'}`}>
-              <MarkdownEditor
+            <div className="flex-1 -mt-12">
+              <SimpleEditor
                 content={state.currentContent}
                 onChange={handleType}
                 readOnly={!state.isSessionActive}
-                isMarkdownView={false}
               />
             </div>
           </div>
@@ -142,7 +147,7 @@ export function BombWritingEditor({
       {showDefeat && (
         <DefeatModal
           onRetry={handleDefeatClose}
-          onReconfigure={handleReconfigure}
+          onReconfigure={handleDefeatReconfigure}
         />
       )}
     </div>

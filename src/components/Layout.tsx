@@ -7,9 +7,6 @@ import { PomodoroSettings } from '../utils/pomodoro/types';
 import { BombWritingSettings } from '../utils/bomb-writing/types';
 import { HeaderToggle } from './icons/HeaderToggle';
 import { BombWritingEditor } from './BombWriting/BombWritingEditor';
-import { Toolbar } from './toolbar/Toolbar';
-import { ViewToggle } from './Editor/ViewToggle';
-import { useViewToggle } from '../hooks/useViewToggle';
 import { useAuth } from '../hooks/useAuth';
 import { AuthModal } from './auth/AuthModal';
 import { FeedbackMode } from './feedback/FeedbackMode';
@@ -29,7 +26,6 @@ export function Layout({
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const isBombSessionActive = mode === 'bomb' && bombSettings;
-  const { isMarkdownView, toggleView } = useViewToggle();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -77,20 +73,8 @@ export function Layout({
               <Editor 
                 mode={mode} 
                 text={text} 
-                onTextChange={setText} 
-                isMarkdownView={isMarkdownView}
+                onTextChange={setText}
               />
-              
-              {/* Toolbar */}
-              <Toolbar />
-              
-              {/* View Toggle */}
-              {!isBombSessionActive && (
-                <ViewToggle 
-                  isMarkdownView={isMarkdownView} 
-                  onToggle={toggleView} 
-                />
-              )}
             </div>
           )}
         </div>

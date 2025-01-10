@@ -1,44 +1,40 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase/client';
 import { Document } from '../types';
-import debounce from 'lodash/debounce';
 
 export function useDocuments() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const clearError = () => setError(null);
+  // Fetch documents
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('documents')
+          .select('*')
+          .order('updated_at', { ascending: false });
 
-  const fetchDocuments = useCallback(async () => {
-    setLoading(true);
-    clearError();
-    try {
-      const { data, error } = await supabase
-        .from('documents')
-        .select('*')
-        .order('updated_at', { ascending: false });
+        if (error) throw error;
 
-      if (error) throw error;
+        setDocuments(data.map(doc => ({
+          ...doc,
+          createdAt: new Date(doc.created_at),
+          updatedAt: new Date(doc.updated_at)
+        })));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch documents');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setDocuments(data.map(doc => ({
-        ...doc,
-        createdAt: new Date(doc.created_at),
-        updatedAt: new Date(doc.updated_at)
-      })));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch documents');
-    } finally {
-      setLoading(false);
-    }
+    fetchDocuments();
   }, []);
 
-  useEffect(() => {
-    fetchDocuments();
-  }, [fetchDocuments]);
-
+  // Save document
   const saveDocument = async (title: string, content: string): Promise<Document | null> => {
-    clearError();
     try {
       const { data, error } = await supabase
         .from('documents')
@@ -62,36 +58,31 @@ export function useDocuments() {
     }
   };
 
-  const updateDocument = debounce(async (id: string, updates: Partial<Document>): Promise<boolean> => {
-    clearError();
+  // Update document
+  const updateDocument = async (id: string, updates: Partial<Document>): Promise<boolean> => {
     try {
-      // Optimistic update
+      const { error } = await supabase
+        .from('documents')
+        .update(updates)
+        .eq('id', id);
+
+      if (error) throw error;
+
       setDocuments(prev => prev.map(doc => 
         doc.id === id 
           ? { ...doc, ...updates, updatedAt: new Date() }
           : doc
       ));
 
-      const { error } = await supabase
-        .from('documents')
-        .update(updates)
-        .eq('id', id);
-
-      if (error) {
-        // Rollback on error
-        await fetchDocuments();
-        throw error;
-      }
-
       return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update document');
       return false;
     }
-  }, 500);
+  };
 
+  // Delete document
   const deleteDocument = async (id: string): Promise<boolean> => {
-    clearError();
     try {
       const { error } = await supabase
         .from('documents')
@@ -112,8 +103,6 @@ export function useDocuments() {
     documents,
     loading,
     error,
-    clearError,
-    refreshDocuments: fetchDocuments,
     saveDocument,
     updateDocument,
     deleteDocument

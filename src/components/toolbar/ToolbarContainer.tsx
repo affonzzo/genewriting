@@ -9,7 +9,7 @@ interface ToolbarContainerProps {
 
 export function ToolbarContainer({ children, isVisible, onToggleVisibility }: ToolbarContainerProps) {
   return (
-    <div className="absolute left-0 top-0 -translate-x-[calc(100%+1rem)] h-full">
+    <div className="w-[48px] shrink-0 py-4 pl-4">
       <div className="sticky top-4 bg-white dark:bg-luxury-800/95 rounded-lg shadow-lg border border-gray-200 dark:border-luxury-600 backdrop-blur-sm">
         <div className="p-1.5">
           <ToolbarToggle isVisible={isVisible} onToggle={onToggleVisibility} />

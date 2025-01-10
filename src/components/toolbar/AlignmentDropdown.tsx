@@ -25,17 +25,16 @@ export function AlignmentDropdown() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
+      <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
-        title="Text Alignment"
+        className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-luxury-800"
       >
         <AlignmentIcon />
       </button>
-      
+
       {isOpen && (
         <div 
-          className="fixed ml-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[120px]"
+          className="fixed ml-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[120px] dark:bg-luxury-900 dark:border-luxury-700"
           style={{
             top: dropdownRef.current?.getBoundingClientRect().top ?? 0,
             left: (dropdownRef.current?.getBoundingClientRect().right ?? 0) + 8
@@ -43,24 +42,24 @@ export function AlignmentDropdown() {
         >
           <button
             onClick={() => handleAlignmentClick(formatCommands.alignLeft)}
-            className="w-full flex items-center px-3 py-2 hover:bg-gray-100 text-gray-700"
+            className="w-full p-1.5 hover:bg-gray-100 dark:hover:bg-luxury-800 flex items-center gap-2"
           >
-            <AlignLeft className="w-4 h-4 mr-2" />
-            <span className="text-sm">Left</span>
+            <AlignLeft className="w-4 h-4" />
+            <span className="text-sm">Esquerda</span>
           </button>
           <button
             onClick={() => handleAlignmentClick(formatCommands.alignCenter)}
-            className="w-full flex items-center px-3 py-2 hover:bg-gray-100 text-gray-700"
+            className="w-full p-1.5 hover:bg-gray-100 dark:hover:bg-luxury-800 flex items-center gap-2"
           >
-            <AlignCenter className="w-4 h-4 mr-2" />
-            <span className="text-sm">Center</span>
+            <AlignCenter className="w-4 h-4" />
+            <span className="text-sm">Centro</span>
           </button>
           <button
             onClick={() => handleAlignmentClick(formatCommands.alignRight)}
-            className="w-full flex items-center px-3 py-2 hover:bg-gray-100 text-gray-700"
+            className="w-full p-1.5 hover:bg-gray-100 dark:hover:bg-luxury-800 flex items-center gap-2"
           >
-            <AlignRight className="w-4 h-4 mr-2" />
-            <span className="text-sm">Right</span>
+            <AlignRight className="w-4 h-4" />
+            <span className="text-sm">Direita</span>
           </button>
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { WritingMode } from './types';
 import { Layout } from './components/Layout';
 import { Modal } from './components/Modal';
@@ -6,7 +6,7 @@ import { PomodoroSettingsContent } from './components/sidebar/PomodoroSettingsCo
 import { PomodoroSettings } from './utils/pomodoro/types';
 import { BombWritingSettings } from './utils/bomb-writing/types';
 
-export default function App(): JSX.Element {
+export default function App() {
   const [mode, setMode] = useState<WritingMode>('free');
   const [text, setText] = useState('');
   const [showSettings, setShowSettings] = useState(false);
@@ -14,44 +14,35 @@ export default function App(): JSX.Element {
   const [onSaveSettings, setOnSaveSettings] = useState<((settings: PomodoroSettings) => void) | null>(null);
   const [bombSettings, setBombSettings] = useState<BombWritingSettings | null>(null);
 
-  const handleOpenSettings = useCallback((settings: PomodoroSettings, onSave: (settings: PomodoroSettings) => void): void => {
-    if (!settings) {
-      console.error('Invalid settings provided');
-      return;
-    }
+  const handleOpenSettings = (settings: PomodoroSettings, onSave: (settings: PomodoroSettings) => void) => {
     setPomodoroSettings(settings);
     setOnSaveSettings(() => onSave);
     setShowSettings(true);
-  }, []);
+  };
 
-  const handleCloseSettings = (): void => {
+  const handleCloseSettings = () => {
     setShowSettings(false);
     setPomodoroSettings(null);
     setOnSaveSettings(null);
   };
 
-  const handleStartBombWriting = (settings: BombWritingSettings): void => {
+  const handleStartBombWriting = (settings: BombWritingSettings) => {
     setBombSettings(settings);
   };
 
-  const handleResetBombWriting = (): void => {
+  const handleResetBombWriting = () => {
     setBombSettings(null);
   };
 
-  const handleBombWritingComplete = useCallback((newContent: string): void => {
-    if (typeof newContent !== 'string') {
-      console.error('Invalid content type received');
-      return;
-    }
+  const handleBombWritingComplete = (newContent: string) => {
     setText((prevText) => {
-      const trimmedNew = newContent.trim();
-      if (!trimmedNew) return prevText;
-      return prevText ? `${prevText.trim()}\n\n${trimmedNew}` : trimmedNew;
+      // Se já existe texto, adiciona uma quebra de linha antes do novo conteúdo
+      return prevText ? `${prevText}\n\n${newContent}` : newContent;
     });
-  }, []);
+  };
 
   return (
-    <React.StrictMode>
+    <>
       <Layout
         mode={mode}
         setMode={setMode}
@@ -64,7 +55,7 @@ export default function App(): JSX.Element {
         onBombWritingComplete={handleBombWritingComplete}
       />
 
-      {pomodoroSettings && onSaveSettings ? (
+      {pomodoroSettings && onSaveSettings && (
         <Modal
           isOpen={showSettings}
           onClose={handleCloseSettings}
@@ -73,15 +64,13 @@ export default function App(): JSX.Element {
           <PomodoroSettingsContent
             settings={pomodoroSettings}
             onSave={(settings) => {
-              if (settings) {
-                onSaveSettings(settings);
-                handleCloseSettings();
-              }
+              onSaveSettings(settings);
+              handleCloseSettings();
             }}
             onClose={handleCloseSettings}
           />
         </Modal>
-      ) : null}
-    </React.StrictMode>
+      )}
+    </>
   );
 }
