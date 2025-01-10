@@ -49,11 +49,11 @@ export function useBombWriting(
     }
 
     const activeWritingTime = activeTimeRef.current;
-    const { wordsCount, averageWPM } = calculateStats(state.currentContent, activeWritingTime);
+    const { wordsCount, averageWPM } = calculateStats(contentRef.current, activeWritingTime);
     
     setState(prev => ({ ...prev, isSessionActive: false }));
     onVictory({ wordsCount, averageWPM, activeWritingTime });
-  }, [state.currentContent, onVictory]);
+  }, [onVictory]);
 
   const startSession = useCallback(() => {
     timerRef.current = new BombWritingTimer(
