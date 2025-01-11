@@ -87,11 +87,12 @@ export function BombWritingEditor({
             {/* Conteúdo anterior - sempre bloqueado */}
             {previousContent && (
               <div>
-                <div className="opacity-60 pointer-events-none select-none">
+                <div className="opacity-60 pointer-events-none select-none pb-6">
                   <SimpleEditor
                     content={previousContent}
                     onChange={() => {}}
                     readOnly={true}
+                    mode="bomb"
                   />
                 </div>
                 <div className="-mt-4">
@@ -101,11 +102,12 @@ export function BombWritingEditor({
             )}
 
             {/* Área de escrita ativa */}
-            <div className="flex-1 -mt-12">
+            <div className={`flex-1 ${previousContent ? '-mt-12 pt-6' : ''}`}>
               <SimpleEditor
                 content={state.currentContent}
                 onChange={handleType}
                 readOnly={!state.isSessionActive}
+                mode="bomb"
               />
             </div>
           </div>

@@ -1,35 +1,53 @@
 /* Editor Container */
 .editor-container {
-  padding: 1.5rem;
+  height: 100%;
   position: relative;
+  padding: 1rem;
+}
+
+/* Estilos do CodeMirror */
+.cm-editor {
+  height: 100%;
+  font-family: inherit;
+}
+
+.cm-scroller {
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.cm-content {
+  font-family: inherit;
+  max-width: 65ch;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 /* Basic Editor */
 .editor {
-  width: 100%;
   outline: none;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #0A0A0A;
-  background: transparent;
-  padding: 1.5rem;
   white-space: pre-wrap;
-  direction: ltr !important;
-  unicode-bidi: plaintext;
-  caret-color: #be9202;
+  word-break: break-word;
+  max-width: 65ch;
+  margin: 0 auto;
+  line-height: 1.5;
+  min-height: 100%;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.editor[data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.editor:focus {
+  outline: none;
 }
 
 .dark .editor {
   color: #E5E5E5;
-  caret-color: #be9202;
-}
-
-/* Placeholder */
-.editor[contenteditable=true]:empty:before {
-  content: attr(data-placeholder);
-  color: #9ca3af;
-  pointer-events: none;
-  position: absolute;
 }
 
 /* Preview Styles */
@@ -111,6 +129,36 @@
 .preview em {
   font-style: italic;
   color: #e5e7eb;
+}
+
+/* Editor Content */
+.editor-content {
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 65ch;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Estilos dos destaques - só aparecem no modo line */
+.editor[data-mode="line"] .long-sentence {
+  background-color: rgba(254, 226, 226, 0.5);
+  border-radius: 0.125rem;
+  padding: 0.125rem 0;
+}
+
+.editor[data-mode="line"] .complex-word {
+  background-color: rgba(254, 243, 199, 0.5);
+  border-radius: 0.125rem;
+  padding: 0 0.125rem;
+}
+
+/* Esconde os destaques em outros modos */
+.editor:not([data-mode="line"]) .long-sentence,
+.editor:not([data-mode="line"]) .complex-word {
+  background-color: transparent;
+  padding: 0;
 }
 
 /* Dark mode overrides */

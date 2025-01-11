@@ -26,6 +26,7 @@ export default function Editor({
             content={lockedContent}
             onChange={() => {}}
             readOnly
+            mode={mode}
           />
         </div>
       )}
@@ -33,6 +34,7 @@ export default function Editor({
         content={text}
         onChange={onTextChange}
         readOnly={isLocked}
+        mode={mode}
       />
     </Paper>
   );
