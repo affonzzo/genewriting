@@ -2,10 +2,16 @@ import { PomodoroSettings } from './types';
 
 // Default settings
 export const DEFAULT_SETTINGS: PomodoroSettings = {
-  workDuration: 25,
+  workDuration: 33,
   shortBreakDuration: 5,
   longBreakDuration: 15,
   sessionsUntilLongBreak: 4,
+  autoStartBreaks: false,
+  autoStartPomodoros: false,
+  alarmSound: true,
+  alarmVolume: 50,
+  tickingSound: false,
+  tickingVolume: 50,
 };
 
 // Local storage key
