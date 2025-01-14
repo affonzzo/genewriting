@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, Settings } from 'lucide-react';
 
 export default function PomodoroTimer() {
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [timeLeft, setTimeLeft] = useState(33 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [currentPomodoro, setCurrentPomodoro] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
@@ -15,7 +15,7 @@ export default function PomodoroTimer() {
           if (time <= 1) {
             setIsRunning(false);
             clearInterval(timerRef.current);
-            return 25 * 60;
+            return 33 * 60;
           }
           return time - 1;
         });
