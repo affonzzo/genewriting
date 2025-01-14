@@ -1,13 +1,62 @@
-import React from 'react';
-import { Info } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Info, Eye, EyeOff } from 'lucide-react';
 import { calculateReadabilityMetrics } from '../../utils/readability';
+import './ReadabilityMetrics.css';
+
+interface TextWarning {
+  type: 'long' | 'very-long';
+  count: number;
+  message: string;
+}
 
 interface ReadabilityMetricsProps {
   text: string;
+  highlightVisibility?: {
+    longSentences: boolean;
+    veryLongSentences: boolean;
+  };
+  onToggleVisibility?: (type: 'longSentences' | 'veryLongSentences') => void;
 }
 
-export function ReadabilityMetrics({ text }: ReadabilityMetricsProps) {
-  const metrics = calculateReadabilityMetrics(text);
+export function ReadabilityMetrics({ 
+  text, 
+  highlightVisibility = { longSentences: true, veryLongSentences: true },
+  onToggleVisibility 
+}: ReadabilityMetricsProps) {
+  const metrics = useMemo(() => calculateReadabilityMetrics(text), [text]);
+
+  // Calcula os warnings para orações longas
+  const warnings = useMemo(() => {
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+    let longCount = 0;
+    let veryLongCount = 0;
+
+    for (const sentence of sentences) {
+      const wordCount = sentence.split(/\s+/).filter(word => word.length > 0).length;
+      if (wordCount >= 35) {
+        veryLongCount++;
+      } else if (wordCount >= 25) {
+        longCount++;
+      }
+    }
+
+    const warnings: TextWarning[] = [];
+    
+    // Sempre adiciona os warnings, mesmo com count 0
+    warnings.push({
+      type: 'very-long',
+      count: veryLongCount,
+      message: 'Considere dividir orações com mais de 35 palavras para melhorar a legibilidade.'
+    });
+
+    warnings.push({
+      type: 'long',
+      count: longCount,
+      message: 'Considere dividir orações com mais de 25 palavras para melhorar a legibilidade.'
+    });
+
+    return warnings;
+  }, [text]);
 
   // Determina o nível de legibilidade geral
   const getReadabilityLevel = () => {
@@ -36,7 +85,7 @@ export function ReadabilityMetrics({ text }: ReadabilityMetricsProps) {
       color: metrics.fleschScore > 75 ? 'bg-emerald-500' : 
              metrics.fleschScore > 50 ? 'bg-green-500' :
              metrics.fleschScore > 25 ? 'bg-yellow-500' : 'bg-red-500',
-      description: 'Índice de facilidade de leitura. Quanto maior, mais fácil de ler é o texto.'
+      description: 'Teste de facilidade de leitura. Quanto maior, mais fácil de ler é o texto.'
     },
     { 
       name: 'Gulpease',
@@ -122,6 +171,7 @@ export function ReadabilityMetrics({ text }: ReadabilityMetricsProps) {
                 {metric.value.toFixed(1)}
               </span>
             </div>
+
             {/* Progress Bar */}
             <div className="relative h-1 bg-gray-100 rounded-full overflow-hidden mt-1">
               <div 
@@ -140,44 +190,71 @@ export function ReadabilityMetrics({ text }: ReadabilityMetricsProps) {
               {metrics.wordCount}
             </span>
           </div>
+
           <div className="bg-gray-50 p-1.5 rounded">
-            <h3 className="text-[10px] text-gray-500">Sentenças</h3>
+            <h3 className="text-[10px] text-gray-500">Tempo de Leitura</h3>
             <span className="text-sm font-semibold text-gray-900">
-              {metrics.sentenceCount}
-            </span>
-          </div>
-          <div className="bg-gray-50 p-1.5 rounded">
-            <h3 className="text-[10px] text-gray-500">Sílabas</h3>
-            <span className="text-sm font-semibold text-gray-900">
-              {metrics.syllableCount}
-            </span>
-          </div>
-          <div className="bg-gray-50 p-1.5 rounded">
-            <h3 className="text-[10px] text-gray-500">Complexas</h3>
-            <span className="text-sm font-semibold text-gray-900">
-              {metrics.complexWordCount}
+              {(() => {
+                const seconds = Math.ceil((metrics.wordCount / 150) * 60);
+                if (seconds < 60) {
+                  return `${seconds} seg`;
+                }
+                return `${Math.ceil(seconds / 60)} min`;
+              })()}
             </span>
           </div>
         </div>
 
-        {/* Long Sentences Warning */}
-        {metrics.longSentences.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-gray-200">
-            <div className="bg-red-50 p-2 rounded">
-              <div className="flex items-start gap-1.5">
+        {/* Cards de Aviso - Sempre Visíveis */}
+        <div className="mt-2 pt-2 border-t border-gray-200">
+          {/* Card para Orações Muito Longas */}
+          <div className={`p-3 rounded-lg bg-red-100 text-red-800 mb-2 ${warnings.find(w => w.type === 'very-long')?.count ? 'opacity-100' : 'opacity-60'}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <Info className="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="text-xs font-medium text-red-800">
-                    {metrics.longSentences.length} frase{metrics.longSentences.length !== 1 && 's'} longa{metrics.longSentences.length !== 1 && 's'}
-                  </h3>
-                  <p className="mt-0.5 text-[10px] text-red-700">
-                    Considere dividir frases com mais de 30 palavras para melhorar a legibilidade.
-                  </p>
-                </div>
+                <span className="font-medium">
+                  {warnings.find(w => w.type === 'very-long')?.count || 0} orações muito longas
+                </span>
               </div>
+              {onToggleVisibility && (
+                <button 
+                  className="visibility-toggle"
+                  onClick={() => onToggleVisibility('veryLongSentences')}
+                  title={highlightVisibility.veryLongSentences ? "Esconder orações muito longas" : "Mostrar orações muito longas"}
+                >
+                  {highlightVisibility.veryLongSentences ? <Eye size={10} className="text-red-500" /> : <EyeOff size={10} className="text-red-300" />}
+                </button>
+              )}
             </div>
+            <p className="text-[10px] mt-1 opacity-75">
+              Considere dividir orações com mais de 35 palavras para melhorar a legibilidade.
+            </p>
           </div>
-        )}
+
+          {/* Card para Orações Longas */}
+          <div className={`p-3 rounded-lg bg-yellow-100 text-yellow-800 ${warnings.find(w => w.type === 'long')?.count ? 'opacity-100' : 'opacity-60'}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Info className="w-3 h-3 text-yellow-500 flex-shrink-0 mt-0.5" />
+                <span className="font-medium">
+                  {warnings.find(w => w.type === 'long')?.count || 0} orações longas
+                </span>
+              </div>
+              {onToggleVisibility && (
+                <button 
+                  className="visibility-toggle"
+                  onClick={() => onToggleVisibility('longSentences')}
+                  title={highlightVisibility.longSentences ? "Esconder orações longas" : "Mostrar orações longas"}
+                >
+                  {highlightVisibility.longSentences ? <Eye size={10} className="text-yellow-500" /> : <EyeOff size={10} className="text-yellow-300" />}
+                </button>
+              )}
+            </div>
+            <p className="text-[10px] mt-1 opacity-75">
+              Considere dividir orações com mais de 25 palavras para melhorar a legibilidade.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -86,3 +86,65 @@
     transform: rotate(45deg) translateY(1000px);
   }
 }
+
+/* Aviso e visibilidade */
+.warning-card {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s;
+}
+
+.warning-card:not(.has-warnings) {
+  opacity: 0.6;
+}
+
+.warning-card.long {
+  background-color: #fff9c4;
+}
+
+.warning-card.very-long {
+  background-color: #ffcdd2;
+}
+
+.warning-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.warning-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warning-count {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.visibility-toggle {
+  padding: 0.15rem;
+  background: transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.visibility-toggle:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.warning-message {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
+}
