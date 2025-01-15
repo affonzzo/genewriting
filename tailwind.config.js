@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
   darkMode: 'class',
   theme: {
     extend: {
@@ -60,6 +62,20 @@ export default {
         glitch: 'glitch 2s infinite',
         scan: 'scan 4s linear infinite',
         noise: 'noise 8s steps(10) infinite',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: 'none',
+            color: 'inherit',
+            a: {
+              color: '#3182ce',
+              '&:hover': {
+                color: '#2c5282',
+              },
+            },
+          },
+        },
       },
     },
   },
