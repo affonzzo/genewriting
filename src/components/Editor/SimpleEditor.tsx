@@ -133,78 +133,25 @@ export function SimpleEditor({
       if (!selection?.rangeCount) return;
       
       const range = selection.getRangeAt(0);
-      
-      // Cria dois <br> para garantir o espaçamento correto
-      const br1 = document.createElement('br');
-      const br2 = document.createElement('br');
+      const br = document.createElement('br');
       
       range.deleteContents();
-      range.insertNode(br1);
-      range.insertNode(br2);
+      range.insertNode(br);
       
-      // Cria um nó de texto vazio para posicionar o cursor
+      // Adiciona um nó de texto vazio após o br para posicionar o cursor
       const textNode = document.createTextNode('');
+      range.setStartAfter(br);
       range.insertNode(textNode);
-      
-      // Posiciona o cursor após a quebra de linha
       range.setStartAfter(textNode);
       range.setEndAfter(textNode);
+      
       selection.removeAllRanges();
       selection.addRange(range);
       
-      // Atualiza o conteúdo e mantém o destaque
+      // Atualiza o conteúdo
       if (editorRef.current) {
         const newContent = editorRef.current.textContent || '';
         onChange(newContent);
-        
-        // Salva a posição do cursor
-        const preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(editorRef.current);
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        const caretOffset = preCaretRange.toString().length;
-        
-        // Atualiza o destaque mantendo o cursor
-        requestAnimationFrame(() => {
-          if (editorRef.current) {
-            const html = highlightText(newContent, highlightVisibility);
-            editorRef.current.innerHTML = html;
-            
-            // Restaura o cursor
-            const sel = window.getSelection();
-            const newRange = document.createRange();
-            let charCount = 0;
-            let done = false;
-            
-            function findPosition(node: Node) {
-              if (done) return;
-              
-              if (node.nodeType === Node.TEXT_NODE) {
-                const nodeLength = node.textContent?.length || 0;
-                if (charCount + nodeLength >= caretOffset) {
-                  newRange.setStart(node, caretOffset - charCount);
-                  newRange.setEnd(node, caretOffset - charCount);
-                  done = true;
-                }
-                charCount += nodeLength;
-              } else {
-                for (const child of Array.from(node.childNodes)) {
-                  findPosition(child);
-                }
-              }
-            }
-            
-            findPosition(editorRef.current);
-            
-            if (!done) {
-              const lastChild = editorRef.current.lastChild || editorRef.current;
-              newRange.selectNodeContents(lastChild);
-              newRange.collapse(false);
-            }
-            
-            sel?.removeAllRanges();
-            sel?.addRange(newRange);
-          }
-        });
       }
     }
   };
