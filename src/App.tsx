@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { WritingMode } from './types';
+import { AuthProvider } from './providers/AuthProvider';
 import { Layout } from './components/Layout';
 import { Modal } from './components/Modal';
 import { PomodoroSettingsContent } from './components/sidebar/PomodoroSettingsContent';
 import { PomodoroSettings } from './utils/pomodoro/types';
 import { BombWritingSettings } from './utils/bomb-writing/types';
+import { useEditor } from './hooks/useEditor';
 
 export default function App() {
   const [mode, setMode] = useState<WritingMode>('free');
-  const [text, setText] = useState('');
   const [showSettings, setShowSettings] = useState(false);
   const [pomodoroSettings, setPomodoroSettings] = useState<PomodoroSettings | null>(null);
   const [onSaveSettings, setOnSaveSettings] = useState<((settings: PomodoroSettings) => void) | null>(null);
   const [bombSettings, setBombSettings] = useState<BombWritingSettings | null>(null);
+  const editor = useEditor();
 
   const handleOpenSettings = (settings: PomodoroSettings, onSave: (settings: PomodoroSettings) => void) => {
     setPomodoroSettings(settings);
@@ -35,24 +37,31 @@ export default function App() {
   };
 
   const handleBombWritingComplete = (newContent: string) => {
-    setText((prevText) => {
+    editor.setText((prevText) => {
       // Se já existe texto, adiciona uma quebra de linha antes do novo conteúdo
       return prevText ? `${prevText}\n\n${newContent}` : newContent;
     });
   };
 
   return (
-    <>
+    <AuthProvider>
       <Layout
         mode={mode}
         setMode={setMode}
-        text={text}
-        setText={setText}
+        text={editor.text}
+        setText={editor.setText}
         onOpenSettings={handleOpenSettings}
         onStartBombWriting={handleStartBombWriting}
         bombSettings={bombSettings}
         onResetBombWriting={handleResetBombWriting}
         onBombWritingComplete={handleBombWritingComplete}
+        currentFileName={editor.currentFile?.name}
+        onNewFile={editor.handleNewFile}
+        onSaveFile={editor.handleSaveFile}
+        onSaveFileAs={editor.handleSaveFileAs}
+        onDuplicateFile={editor.handleDuplicateFile}
+        onDeleteFile={editor.handleDeleteFile}
+        onRenameFile={editor.handleRenameFile}
       />
 
       {pomodoroSettings && onSaveSettings && (
@@ -71,6 +80,6 @@ export default function App() {
           />
         </Modal>
       )}
-    </>
+    </AuthProvider>
   );
 }
