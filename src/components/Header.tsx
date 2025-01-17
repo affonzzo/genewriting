@@ -5,7 +5,7 @@ import { useTheme } from '../hooks/useTheme';
 import { FileMenu } from './FileMenu';
 import { FileTitle } from './FileTitle';
 import { ShareButton } from './ShareButton';
-import { ProfileButton } from './ProfileButton';
+import { UserMenu } from './UserMenu';
 
 interface HeaderProps {
   mode: WritingMode;
@@ -101,15 +101,19 @@ export function Header({
 
         {/* Center - Title */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4">
-          <h1 className="text-2xl font-['Poppins'] dark:text-white">
-            <span className="font-semibold">Gene</span>Writing
-          </h1>
+          <div className="flex items-center">
+            <img 
+              src="/assets/GeneLogo.png" 
+              alt="GeneWriting"
+              className="h-8 w-auto object-contain" 
+            />
+          </div>
         </div>
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {[
+            {[/* eslint-disable @typescript-eslint/no-unused-vars */
               { id: 'free', icon: PenLine, label: 'Free' },
               { id: 'bomb', icon: Bomb, label: 'Bomb' },
               { id: 'line', icon: LineChart, label: 'Editing' },
@@ -118,7 +122,7 @@ export function Header({
               <button
                 key={id}
                 onClick={() => handleModeChange(id as WritingMode)}
-                className={`
+                className={`/* eslint-disable @typescript-eslint/no-unused-vars */
                   p-1.5 rounded-md transition-colors duration-150
                   ${mode === id 
                     ? 'bg-luxury-100 text-luxury-800 dark:bg-luxury-700 dark:text-luxury-200' 
@@ -136,12 +140,7 @@ export function Header({
 
           <div className="flex items-center gap-4 pl-2 border-l border-gray-200 dark:border-luxury-700">
             <ShareButton onShare={onShare} />
-            <ProfileButton
-              userPhotoUrl={userPhotoUrl}
-              userName={userName}
-              onLogout={onLogout}
-              onSettings={onSettings}
-            />
+            <UserMenu />
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"

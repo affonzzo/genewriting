@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 import { User } from '@supabase/supabase-js'
 import { AuthModal } from './AuthModal'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { LogOut, User as UserIcon } from 'lucide-react'
+import { LogOut, User as UserIcon, Settings } from 'lucide-react'
 
 export function UserMenu() {
   const [user, setUser] = useState<User | null>(null)
@@ -34,7 +34,7 @@ export function UserMenu() {
       <>
         <button
           onClick={() => setShowAuthModal(true)}
-          className="text-sm font-medium text-gray-700 hover:text-gray-900"
+          className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md hover:bg-luxury-50 dark:hover:bg-luxury-800 transition-colors"
         >
           Entrar
         </button>
@@ -49,32 +49,47 @@ export function UserMenu() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+        <button 
+          className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+          title={user.email}
+        >
           {user.email?.[0].toUpperCase()}
         </button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[220px] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-50"
+          className="min-w-[220px] bg-white dark:bg-luxury-800 rounded-lg p-2 shadow-lg will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-50 border border-gray-100 dark:border-luxury-700"
           sideOffset={5}
+          align="end"
         >
-          <DropdownMenu.Item className="text-[13px] leading-none text-gray-700 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-gray-300 data-[disabled]:pointer-events-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white">
-            <UserIcon className="mr-2 h-4 w-4" />
-            {user.email}
-          </DropdownMenu.Item>
+          <div className="px-2 py-1.5 mb-1">
+            <div className="text-sm font-medium text-gray-900 dark:text-white">
+              {user.email}
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              Usuário GeneWriting
+            </div>
+          </div>
           
-          <DropdownMenu.Separator className="h-[1px] bg-gray-200 m-[5px]" />
+          <DropdownMenu.Separator className="h-[1px] bg-gray-100 dark:bg-luxury-700 my-1" />
           
           <DropdownMenu.Item 
-            className="text-[13px] leading-none text-gray-700 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-gray-300 data-[disabled]:pointer-events-none data-[highlighted]:bg-blue-500 data-[highlighted]:text-white cursor-pointer"
+            className="text-sm text-gray-700 dark:text-gray-200 rounded-md flex items-center px-2 py-1.5 select-none outline-none data-[highlighted]:bg-luxury-50 dark:data-[highlighted]:bg-luxury-700 cursor-pointer"
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            Configurações
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item 
+            className="text-sm text-gray-700 dark:text-gray-200 rounded-md flex items-center px-2 py-1.5 select-none outline-none data-[highlighted]:bg-luxury-50 dark:data-[highlighted]:bg-luxury-700 cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Sair
           </DropdownMenu.Item>
 
-          <DropdownMenu.Arrow className="fill-white" />
+          <DropdownMenu.Arrow className="fill-white dark:fill-luxury-800" />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
