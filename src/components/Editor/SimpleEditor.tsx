@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ReadabilityMetrics } from '../sidebar/ReadabilityMetrics';
 import './styles.css';
 
@@ -64,95 +64,13 @@ export function SimpleEditor({
     if (!readOnly) {
       const newContent = e.currentTarget.textContent || '';
       onChange(newContent);
-      
-      // Atualiza o destaque imediatamente após a mudança
-      if (mode === 'line' && editorRef.current) {
-        const selection = window.getSelection();
-        if (!selection?.rangeCount) return;
-        
-        const range = selection.getRangeAt(0);
-        // Salva a posição relativa do cursor
-        const preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(editorRef.current);
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        const caretOffset = preCaretRange.toString().length;
-
-        // Atualiza o conteúdo
-        requestAnimationFrame(() => {
-          if (editorRef.current) {
-            editorRef.current.innerHTML = highlightText(newContent, highlightVisibility);
-            
-            // Restaura o cursor na posição correta
-            const sel = window.getSelection();
-            const newRange = document.createRange();
-            
-            // Encontra a posição correta para o cursor
-            let charCount = 0;
-            let done = false;
-            
-            function findPosition(node: Node) {
-              if (done) return;
-              
-              if (node.nodeType === Node.TEXT_NODE) {
-                const nodeLength = node.textContent?.length || 0;
-                if (charCount + nodeLength >= caretOffset) {
-                  newRange.setStart(node, caretOffset - charCount);
-                  newRange.setEnd(node, caretOffset - charCount);
-                  done = true;
-                }
-                charCount += nodeLength;
-              } else {
-                for (const child of Array.from(node.childNodes)) {
-                  findPosition(child);
-                }
-              }
-            }
-            
-            findPosition(editorRef.current);
-            
-            if (!done) {
-              // Se não encontrou a posição exata, coloca no final
-              const lastChild = editorRef.current.lastChild || editorRef.current;
-              newRange.selectNodeContents(lastChild);
-              newRange.collapse(false);
-            }
-            
-            sel?.removeAllRanges();
-            sel?.addRange(newRange);
-          }
-        });
-      }
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
-      
-      const selection = window.getSelection();
-      if (!selection?.rangeCount) return;
-      
-      const range = selection.getRangeAt(0);
-      const br = document.createElement('br');
-      
-      range.deleteContents();
-      range.insertNode(br);
-      
-      // Adiciona um nó de texto vazio após o br para posicionar o cursor
-      const textNode = document.createTextNode('');
-      range.setStartAfter(br);
-      range.insertNode(textNode);
-      range.setStartAfter(textNode);
-      range.setEndAfter(textNode);
-      
-      selection.removeAllRanges();
-      selection.addRange(range);
-      
-      // Atualiza o conteúdo
-      if (editorRef.current) {
-        const newContent = editorRef.current.textContent || '';
-        onChange(newContent);
-      }
+      // Não faz nada, deixa o comportamento padrão do contentEditable
+      return;
     }
   };
 
@@ -164,64 +82,64 @@ export function SimpleEditor({
   };
 
   useEffect(() => {
-    const editor = editorRef.current;
-    if (!editor) return;
-
-    const selection = window.getSelection();
-    let caretOffset = 0;
-    
-    if (selection?.rangeCount) {
-      const range = selection.getRangeAt(0);
-      const preCaretRange = range.cloneRange();
-      preCaretRange.selectNodeContents(editor);
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      caretOffset = preCaretRange.toString().length;
+    if (editorRef.current && editorRef.current.textContent !== content) {
+      editorRef.current.textContent = content;
     }
+  }, [content]);
 
-    // Atualiza o conteúdo com os destaques
-    if (mode === 'line') {
-      editor.innerHTML = highlightText(content, highlightVisibility);
-
-      // Só tenta restaurar o cursor se havia uma seleção antes
+  useEffect(() => {
+    if (editorRef.current && mode === 'line') {
+      const editor = editorRef.current;
+      const selection = window.getSelection();
+      let cursorOffset = 0;
+      
+      // Salva a posição do cursor
       if (selection?.rangeCount) {
-        requestAnimationFrame(() => {
-          const sel = window.getSelection();
-          const newRange = document.createRange();
-          let charCount = 0;
-          let done = false;
+        const range = selection.getRangeAt(0);
+        const preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(editor);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        cursorOffset = preCaretRange.toString().length;
+      }
+
+      // Aplica o highlighting
+      editor.innerHTML = highlightText(editor.textContent || '', highlightVisibility);
+
+      // Restaura o cursor
+      if (selection?.rangeCount) {
+        const range = document.createRange();
+        let charCount = 0;
+        let done = false;
+
+        function findPosition(node: Node) {
+          if (done) return;
           
-          function findPosition(node: Node) {
-            if (done) return;
-            
-            if (node.nodeType === Node.TEXT_NODE) {
-              const nodeLength = node.textContent?.length || 0;
-              if (charCount + nodeLength >= caretOffset) {
-                newRange.setStart(node, caretOffset - charCount);
-                newRange.setEnd(node, caretOffset - charCount);
-                done = true;
-              }
-              charCount += nodeLength;
-            } else {
-              for (const child of Array.from(node.childNodes)) {
-                findPosition(child);
-              }
+          if (node.nodeType === Node.TEXT_NODE) {
+            const nodeLength = node.textContent?.length || 0;
+            if (charCount + nodeLength >= cursorOffset) {
+              range.setStart(node, cursorOffset - charCount);
+              range.setEnd(node, cursorOffset - charCount);
+              done = true;
+            }
+            charCount += nodeLength;
+          } else {
+            for (const child of Array.from(node.childNodes)) {
+              findPosition(child);
             }
           }
-          
-          findPosition(editor);
-          
-          if (!done) {
-            const lastChild = editor.lastChild || editor;
-            newRange.selectNodeContents(lastChild);
-            newRange.collapse(false);
-          }
-          
-          sel?.removeAllRanges();
-          sel?.addRange(newRange);
-        });
+        }
+
+        findPosition(editor);
+        
+        if (!done) {
+          const lastChild = editor.lastChild || editor;
+          range.selectNodeContents(lastChild);
+          range.collapse(false);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
-    } else {
-      editor.textContent = content;
     }
   }, [content, mode, highlightVisibility]);
 
@@ -235,7 +153,6 @@ export function SimpleEditor({
         className="editor"
         suppressContentEditableWarning
         spellCheck
-        translate="no"
         data-placeholder="Comece a escrever..."
         data-mode={mode}
       />

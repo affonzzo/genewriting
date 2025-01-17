@@ -1,6 +1,5 @@
 /* Editor Container */
 .editor-container {
-  height: 100%;
   position: relative;
   padding: 1rem;
 }
@@ -8,32 +7,40 @@
 /* Basic Editor */
 .editor {
   outline: none;
-  white-space: pre-wrap;
+  white-space: pre-wrap !important;
   word-break: break-word;
+  width: 100%;
   max-width: 65ch;
   margin: 0 auto;
   line-height: 1.5;
-  min-height: 100%;
   font-size: 1rem;
   color: #1a1a1a;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  -webkit-appearance: none;
+}
+
+.editor::placeholder {
+  color: #666;
 }
 
 .editor[data-placeholder]:empty:before {
   content: attr(data-placeholder);
-  color: #9ca3af;
+  color: #666;
   pointer-events: none;
 }
 
 /* Estilos dos destaques - só aparecem no modo line */
 .editor[data-mode="line"] .long-sentence {
-  background-color: #fff9c4 !important;
+  background-color: rgba(255, 255, 0, 0.3) !important;
   padding: 2px 0;
   border-radius: 2px;
   display: inline;
 }
 
 .editor[data-mode="line"] .very-long-sentence {
-  background-color: #ffcdd2 !important;
+  background-color: rgba(255, 0, 0, 0.3) !important;
   padding: 2px 0;
   border-radius: 2px;
   display: inline;
