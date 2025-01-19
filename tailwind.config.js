@@ -21,8 +21,16 @@ module.exports = {
           900: '#333333',
         },
         paper: {
-          light: '#f1edea', // New light mode background
-          dark: '#0A0A0A'  // Dark mode background
+          light: '#ffffff', 
+          dark: '#000000'  
+        },
+        background: {
+          light: '#f1f1f1',
+          dark: '#1a1a1a'
+        },
+        brand: {
+          gold: '#be9202',
+          gray: '#84796c',
         }
       },
       keyframes: {

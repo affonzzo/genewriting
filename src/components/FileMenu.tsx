@@ -1,5 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { ChevronDown, File, FilePlus, Save, SaveAll, Import, Copy, Trash } from 'lucide-react';
+import { 
+  ChevronDown, 
+  FileText, 
+  FilePlus2, 
+  Save, 
+  SaveAll, 
+  FileInput, 
+  Copy, 
+  Trash2 
+} from 'lucide-react';
 
 interface FileMenuProps {
   text: string;
@@ -78,41 +87,48 @@ export function FileMenu({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          p-1.5 rounded-md transition-colors duration-150 flex items-center gap-1
-          text-gray-600 hover:bg-luxury-50 dark:text-gray-400 dark:hover:bg-luxury-800
+          flex items-center gap-1 px-2 py-1.5 rounded-lg transition-all duration-300
+          text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+          dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
         `}
       >
-        <File className="w-5 h-5" />
+        <FileText className="w-5 h-5" />
         <ChevronDown className="w-4 h-4" />
       </button>
 
       {isOpen && (
-        <div className="
-          absolute top-full left-0 mt-1 w-48
-          bg-white dark:bg-luxury-800
-          border border-gray-200 dark:border-luxury-700
-          rounded-md shadow-lg
-          z-50
-        ">
-          <div className="py-1">
+        <div
+          ref={menuRef}
+          className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-brand-gray/20 py-1 min-w-[200px]
+            dark:bg-black dark:border-brand-gray/20 dark:shadow-2xl"
+        >
+          <div className="space-y-1 p-1">
             <button
-              onClick={() => { onNew?.(); setIsOpen(false); }}
+              onClick={() => {
+                onNew?.();
+                setIsOpen(false);
+              }}
+              disabled={!onNew}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
-              <FilePlus className="w-4 h-4" />
+              <FilePlus2 className="w-4 h-4" />
               Novo arquivo
             </button>
 
             <button
-              onClick={() => { onSave?.(); setIsOpen(false); }}
+              onClick={() => {
+                onSave?.();
+                setIsOpen(false);
+              }}
+              disabled={!onSave}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
               <Save className="w-4 h-4" />
@@ -120,51 +136,59 @@ export function FileMenu({
             </button>
 
             <button
-              onClick={() => { onSaveAs?.(currentFileName || 'Sem título'); setIsOpen(false); }}
+              onClick={() => {
+                onSaveAs?.(currentFileName || '');
+                setIsOpen(false);
+              }}
+              disabled={!onSaveAs}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
               <SaveAll className="w-4 h-4" />
               Salvar como...
             </button>
 
-            <hr className="my-1 border-gray-200 dark:border-luxury-700" />
-
             <button
               onClick={handleImportClick}
+              disabled={!onImport}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
-              <Import className="w-4 h-4" />
+              <FileInput className="w-4 h-4" />
               Importar...
             </button>
 
             <button
-              onClick={handleExport}
+              onClick={() => {
+                // TODO: Implement export
+                setIsOpen(false);
+              }}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
-              <Import className="w-4 h-4 rotate-180" />
+              <FileInput className="w-4 h-4 rotate-180" />
               Exportar
             </button>
 
-            <hr className="my-1 border-gray-200 dark:border-luxury-700" />
-
             <button
-              onClick={() => { onDuplicate?.(); setIsOpen(false); }}
+              onClick={() => {
+                onDuplicate?.();
+                setIsOpen(false);
+              }}
+              disabled={!onDuplicate}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-gray-700 dark:text-gray-200
-                hover:bg-luxury-50 dark:hover:bg-luxury-700
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold 
+                dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
               "
             >
               <Copy className="w-4 h-4" />
@@ -172,14 +196,18 @@ export function FileMenu({
             </button>
 
             <button
-              onClick={() => { onDelete?.(); setIsOpen(false); }}
+              onClick={() => {
+                onDelete?.();
+                setIsOpen(false);
+              }}
+              disabled={!onDelete}
               className="
-                w-full px-4 py-2 text-sm text-left flex items-center gap-2
-                text-red-600 dark:text-red-400
-                hover:bg-red-50 dark:hover:bg-red-900/20
+                w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-300 disabled:opacity-50
+                text-red-600 hover:bg-red-50 hover:text-red-700
+                dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300
               "
             >
-              <Trash className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" />
               Excluir
             </button>
           </div>

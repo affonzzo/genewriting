@@ -142,7 +142,7 @@ export default function CustomAuth() {
         <div className="text-center space-y-2">
           <div className="flex justify-center items-center">
             <img 
-              src="/assets/GeneLogo.png" 
+              src="/LogoGene.png" 
               alt="GeneWriting" 
               className="h-14 w-auto object-contain drop-shadow-md" 
             />

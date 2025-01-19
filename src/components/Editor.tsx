@@ -72,24 +72,30 @@ export default function Editor({
 
   return (
     <>
-      <Paper>
-        {isLocked && lockedContent && (
-          <div className="border-b border-gray-100">
+      <div className="flex-1 flex justify-center items-start px-8 py-4 bg-gray-100 dark:bg-[#1a1a1a]">
+        <div 
+          className="relative w-full max-w-[650px] min-h-[calc(100vh-4rem)] bg-white dark:bg-black rounded-lg shadow-xl dark:shadow-2xl"
+        >
+          <div className="h-full w-full p-8 text-gray-900 dark:text-white">
+            {isLocked && lockedContent && (
+              <div className="border-b border-gray-100">
+                <SimpleEditor
+                  content={lockedContent}
+                  onChange={() => {}}
+                  readOnly
+                  mode={mode}
+                />
+              </div>
+            )}
             <SimpleEditor
-              content={lockedContent}
-              onChange={() => {}}
-              readOnly
+              content={text}
+              onChange={handleChange}
+              readOnly={isLocked}
               mode={mode}
             />
           </div>
-        )}
-        <SimpleEditor
-          content={text}
-          onChange={handleChange}
-          readOnly={isLocked}
-          mode={mode}
-        />
-      </Paper>
+        </div>
+      </div>
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 

@@ -8,7 +8,6 @@ import { StartModal } from './Modals/StartModal';
 import { VictoryModal } from './Modals/VictoryModal';
 import { DefeatModal } from './Modals/DefeatModal';
 import { BombBoundary } from './BombBoundary';
-import { Paper } from '../Paper';
 import { SimpleEditor } from '../Editor/SimpleEditor';
 
 interface BombWritingEditorProps {
@@ -80,14 +79,14 @@ export function BombWritingEditor({
   }, [resetSession]);
 
   return (
-    <div className="flex-1 flex">
-      <div className="flex-1">
-        <Paper>
+    <div className="flex-1 flex justify-center items-start px-8 py-4 bg-gray-100 dark:bg-[#1a1a1a]">
+      <div className="relative w-full max-w-[650px] min-h-[calc(100vh-4rem)] bg-white dark:bg-black rounded-lg shadow-xl dark:shadow-2xl">
+        <div className="h-full w-full p-8">
           <div className="flex flex-col min-h-full">
             {/* Conteúdo anterior - sempre bloqueado */}
             {previousContent && (
               <div>
-                <div className="opacity-60 pointer-events-none select-none pb-6">
+                <div className="opacity-60 pointer-events-none select-none pb-6 text-gray-900 dark:text-white">
                   <SimpleEditor
                     content={previousContent}
                     onChange={() => {}}
@@ -102,7 +101,7 @@ export function BombWritingEditor({
             )}
 
             {/* Área de escrita ativa */}
-            <div className={`flex-1 ${previousContent ? '-mt-12 pt-6' : ''}`}>
+            <div className={`flex-1 ${previousContent ? '-mt-12 pt-6' : ''} text-gray-900 dark:text-white`}>
               <SimpleEditor
                 content={state.currentContent}
                 onChange={handleType}
@@ -111,7 +110,7 @@ export function BombWritingEditor({
               />
             </div>
           </div>
-        </Paper>
+        </div>
       </div>
 
       {/* Timer */}

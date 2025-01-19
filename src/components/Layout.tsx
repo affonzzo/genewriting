@@ -122,28 +122,28 @@ export function Layout({
           className={`
             absolute left-1/2 -translate-x-1/2 ${isHeaderVisible ? '-bottom-4' : 'top-2'}
             z-50 w-8 h-8 rounded-full 
-            bg-white dark:bg-luxury-800 
-            shadow-lg border border-gray-200 dark:border-luxury-600
+            bg-white dark:bg-black
+            shadow-lg border border-brand-gray/20 dark:border-brand-gray/20
             flex items-center justify-center
-            hover:bg-gray-50 dark:hover:bg-luxury-700
+            hover:bg-brand-gold/10 hover:text-brand-gold dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold
             transition-all duration-200
           `}
         >
-          <HeaderToggle isOpen={isHeaderVisible} className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <HeaderToggle isOpen={isHeaderVisible} className="w-4 h-4 text-brand-gray dark:text-brand-gray" />
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden relative">
+      <div className="flex-1 flex relative">
         {/* File Explorer */}
         {showExplorer && (
-          <div className="w-64 border-r border-gray-200 dark:border-luxury-700 bg-white dark:bg-luxury-800">
+          <div className="w-64 border-r border-brand-gray/20 dark:border-brand-gray/20 bg-white dark:bg-black">
             <FileExplorer />
           </div>
         )}
 
         {/* Editor Container */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative">
           {mode === 'feedback' ? (
             <FeedbackMode text={text} onTextChange={setText} />
           ) : mode === 'bomb' && bombSettings ? (
@@ -154,13 +154,11 @@ export function Layout({
               onComplete={onBombWritingComplete}
             />
           ) : (
-            <div className="relative flex-1">
-              <Editor 
-                mode={mode} 
-                text={text} 
-                onTextChange={setText}
-              />
-            </div>
+            <Editor 
+              mode={mode} 
+              text={text} 
+              onTextChange={setText}
+            />
           )}
         </div>
 

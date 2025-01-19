@@ -1,5 +1,17 @@
 import React from 'react';
-import { PenLine, Bomb, LineChart, MessageSquare, Sun, Moon, Folder, Home } from 'lucide-react';
+import { 
+  Pencil, 
+  Bomb, 
+  LineChart, 
+  MessagesSquare, 
+  Sun, 
+  Moon, 
+  FolderKanban, 
+  LayoutDashboard,
+  ScrollText,
+  Bot,
+  BrainCog
+} from 'lucide-react';
 import { WritingMode } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { FileMenu } from './FileMenu';
@@ -58,27 +70,27 @@ export function Header({
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 relative z-40 dark:bg-luxury-900 dark:border-luxury-700">
+    <header className="bg-white border-b border-brand-gray/20 relative z-40 dark:bg-black dark:border-brand-gray/20">
       <div className="h-16 px-4 flex items-center justify-between">
         {/* Left Side */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => {/* TODO: Implementar navegação para home */}}
-            className="p-1.5 rounded-md transition-colors duration-150 text-gray-600 hover:bg-luxury-50 dark:text-gray-400 dark:hover:bg-luxury-800"
+            className="p-1.5 rounded-lg transition-all duration-300 text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold"
             title="Home"
           >
-            <Home className="w-5 h-5" />
+            <LayoutDashboard className="w-5 h-5" strokeWidth={1.5} />
           </button>
 
           <button
             onClick={onToggleExplorer}
-            className={`p-1.5 rounded-md transition-colors duration-150
+            className={`p-1.5 rounded-lg transition-all duration-300
               ${showExplorer 
-                ? 'bg-luxury-100 text-luxury-800 dark:bg-luxury-700 dark:text-luxury-200' 
-                : 'text-gray-600 hover:bg-luxury-50 dark:text-gray-400 dark:hover:bg-luxury-800'}`}
+                ? 'bg-brand-gold/10 text-brand-gold dark:bg-brand-gold/10 dark:text-brand-gold' 
+                : 'text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold'}`}
             title="Toggle Dossiê"
           >
-            <Folder className="w-5 h-5" />
+            <FolderKanban className="w-5 h-5" strokeWidth={1.5} />
           </button>
 
           <div className="flex items-center">
@@ -103,7 +115,7 @@ export function Header({
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4">
           <div className="flex items-center">
             <img 
-              src="/assets/GeneLogo.png" 
+              src="/LogoGene.png" 
               alt="GeneWriting"
               className="h-8 w-auto object-contain" 
             />
@@ -113,43 +125,71 @@ export function Header({
         {/* Right Side */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {[/* eslint-disable @typescript-eslint/no-unused-vars */
-              { id: 'free', icon: PenLine, label: 'Free' },
-              { id: 'bomb', icon: Bomb, label: 'Bomb' },
-              { id: 'line', icon: LineChart, label: 'Editing' },
-              { id: 'feedback', icon: MessageSquare, label: 'Chat' }
+            {[
+              { 
+                id: 'planning', 
+                icon: ScrollText, 
+                label: 'Planning Mode',
+              },
+              { 
+                id: 'free', 
+                icon: Pencil, 
+                label: 'Free Writing',
+              },
+              { 
+                id: 'bomb', 
+                icon: Bomb, 
+                label: 'Bomb Writing',
+              },
+              { 
+                id: 'line', 
+                icon: LineChart, 
+                label: 'Line Editing',
+              },
+              { 
+                id: 'chat', 
+                icon: MessagesSquare, 
+                label: 'Chat',
+              },
+              { 
+                id: 'agent', 
+                icon: BrainCog, 
+                label: 'AI Agent',
+              }
             ].map(({ id, icon: Icon, label }) => (
               <button
                 key={id}
                 onClick={() => handleModeChange(id as WritingMode)}
-                className={`/* eslint-disable @typescript-eslint/no-unused-vars */
-                  p-1.5 rounded-md transition-colors duration-150
+                className={`p-1.5 rounded-lg transition-all duration-300 relative group
                   ${mode === id 
-                    ? 'bg-luxury-100 text-luxury-800 dark:bg-luxury-700 dark:text-luxury-200' 
-                    : 'text-gray-600 hover:bg-luxury-50 dark:text-gray-400 dark:hover:bg-luxury-800'
+                    ? 'bg-brand-gold text-white dark:bg-brand-gold dark:text-white' 
+                    : 'text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold'
                   }
                   ${isLocked && id !== mode ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
                 disabled={isLocked && id !== mode}
                 title={label}
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-5 h-5" strokeWidth={1.5} />
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white dark:bg-white dark:text-black text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                  {label}
+                </div>
               </button>
             ))}
           </div>
 
-          <div className="flex items-center gap-4 pl-2 border-l border-gray-200 dark:border-luxury-700">
+          <div className="flex items-center gap-4 pl-2 border-l border-brand-gray/20 dark:border-brand-gray/20">
             <ShareButton onShare={onShare} />
             <UserMenu />
             <button
               onClick={toggleTheme}
-              className="p-1.5 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              className="p-1.5 rounded-lg text-brand-gray hover:bg-brand-gold/10 hover:text-brand-gold dark:text-brand-gray dark:hover:bg-brand-gold/10 dark:hover:text-brand-gold transition-all duration-300"
               title={isDark ? 'Light Mode' : 'Dark Mode'}
             >
               {isDark ? (
-                <Sun className="w-4 h-4" />
+                <Sun className="w-4 h-4" strokeWidth={1.5} />
               ) : (
-                <Moon className="w-4 h-4" />
+                <Moon className="w-4 h-4" strokeWidth={1.5} />
               )}
             </button>
           </div>

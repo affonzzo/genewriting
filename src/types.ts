@@ -1,4 +1,4 @@
-export type WritingMode = 'free' | 'bomb' | 'line' | 'feedback';
+export type WritingMode = 'planning' | 'free' | 'bomb' | 'line' | 'chat' | 'agent';
 
 export interface Document {
   id: string;
